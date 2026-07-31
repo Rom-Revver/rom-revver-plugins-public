@@ -1,0 +1,21 @@
+{
+  "id": "com.romrevver.example.welcome",
+  "name": "Welcome",
+  "version": "1.0.0",
+  "description": "An introduction to ROM Revver plugins — what they are and what a panel can show.",
+  "panel": {
+    "title": "Welcome",
+    "blocks": [
+      { "type": "heading", "text": "Welcome to ROM Revver plugins" },
+      {
+        "type": "text",
+        "text": "This panel is a **plugin** — a small JSON file the app renders. Plugins are *declarative*: no code runs, and they can't change your ROM.\n\nWhat a panel can show:\n\n- headings and **rich** `text`\n- your ROM's properties and table lists\n- a table's values as a read-only grid\n\nOpen a ROM, then try the other example plugins to see the data blocks come alive."
+      },
+      { "type": "divider" },
+      {
+        "type": "text",
+        "text": "Add more from **Plugins ▸ Add plugin…**. See `docs/plugins.md` to write your own."
+      }
+    ]
+  }
+}

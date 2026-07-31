@@ -1,0 +1,27 @@
+ROM Revver
+
+Copyright (c) 2026 Ethan Melamed. All rights reserved.
+
+This software and its source code are proprietary and confidential.
+
+No license or right to use, copy, reproduce, modify, merge, publish,
+distribute, sublicense, or sell any part of this software or its source code
+is granted, whether by possessing a copy or otherwise, EXCEPT to the extent
+the copyright holder grants it in a separate agreement or written permission.
+
+The copyright holder may grant permission to specific people — for example,
+members of a beta-testing program — informally or in writing. Any such
+permission applies only to the person it is given to, only to the versions and
+purposes it names, and may be withdrawn for future versions. If you want
+certainty about what you are permitted to do, ask the copyright holder for an
+agreement.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ROM Revver edits engine control firmware. A wrong value can permanently damage
+hardware or make a vehicle unsafe. Any use is entirely at your own risk.

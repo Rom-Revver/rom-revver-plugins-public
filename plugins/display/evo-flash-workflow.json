@@ -1,0 +1,24 @@
+{
+  "id": "com.romrevver.example.evo-workflow",
+  "name": "Evo Flash Workflow",
+  "version": "1.0.0",
+  "description": "How ROM Revver fits an Evo tuning workflow alongside ECUFlash + a Tactrix cable.",
+  "panel": {
+    "title": "Evo Flash Workflow",
+    "blocks": [
+      { "type": "heading", "text": "Edit here, flash with ECUFlash" },
+      {
+        "type": "text",
+        "text": "ROM Revver is the **editor** in the Evo loop — reading and flashing stay with **ECUFlash + a Tactrix OpenPort** cable.\n\n1. **Read** your ECU with ECUFlash and keep the stock read as a backup.\n2. **Open** the `.bin` here against your ECUFlash-format definitions.\n3. **Edit** — ranges, the op bar, interpolation, compare vs your stock read.\n4. **Save As** a new file; saves are byte-exact (your edits, nothing else).\n5. **Flash** the saved image with ECUFlash, then verify and iterate."
+      },
+      { "type": "divider" },
+      { "type": "heading", "text": "This ROM" },
+      { "type": "romInfo" },
+      { "type": "divider" },
+      {
+        "type": "text",
+        "text": "SH705x Evo definitions declare no checksum routine — byte-exact saves are correct there. If a definition *does* declare one (e.g. Evo X `mitsucan`), ROM Revver refuses to save an edited image rather than write a stale checksum."
+      }
+    ]
+  }
+}

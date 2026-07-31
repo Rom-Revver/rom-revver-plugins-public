@@ -1,0 +1,17 @@
+{
+  "id": "com.romrevver.example.evo-fuel",
+  "name": "Fuel Tables",
+  "version": "1.0.0",
+  "description": "Every Fuel-category table in the loaded definition, for any platform whose defs categorise fuel tables.",
+  "panel": {
+    "title": "Fuel Tables",
+    "blocks": [
+      { "type": "heading", "text": "Fuel tables in this calibration" },
+      {
+        "type": "text",
+        "text": "Every table the loaded definition files under its **Fuel** category — click one in the tree to open it. Categories come from the definition, so this works on any platform whose defs categorise fuel tables (Evo ECUFlash sets do)."
+      },
+      { "type": "tableList", "category": "Fuel" }
+    ]
+  }
+}

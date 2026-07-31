@@ -1,0 +1,16 @@
+{
+  "id": "com.romrevver.example.inspector",
+  "name": "ROM Inspector",
+  "version": "1.0.0",
+  "description": "Calibration properties and the full table list for the open ROM.",
+  "panel": {
+    "title": "ROM Inspector",
+    "blocks": [
+      { "type": "heading", "text": "Calibration" },
+      { "type": "romInfo" },
+      { "type": "divider" },
+      { "type": "heading", "text": "All tables" },
+      { "type": "tableList" }
+    ]
+  }
+}

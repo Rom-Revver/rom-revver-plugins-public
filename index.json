@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-07-31T11:41:56.895Z",
+  "plugins": [
+    {
+      "id": "com.romrevver.example.welcome",
+      "name": "Welcome",
+      "description": "An introduction to ROM Revver plugins — what they are and what a panel can show.",
+      "version": "1.0.0",
+      "capabilities": [],
+      "folder": "display",
+      "path": "plugins/display/welcome.json",
+      "sha256": "d0a1f2300e919485692db96e19ae6e510248f499810e0706d6061c3930116c89",
+      "priced": false,
+      "provenance": "official",
+      "page": "plugins/display/welcome.md"
+    },
+    {
+      "id": "com.romrevver.example.inspector",
+      "name": "ROM Inspector",
+      "description": "Calibration properties and the full table list for the open ROM.",
+      "version": "1.0.0",
+      "capabilities": [],
+      "folder": "display",
+      "path": "plugins/display/rom-inspector.json",
+      "sha256": "7fac0a525cd08d6315c83b9365efaa37bb124edaded81854293c6d71788a8059",
+      "priced": false,
+      "provenance": "official",
+      "page": "plugins/display/rom-inspector.md"
+    },
+    {
+      "id": "com.romrevver.example.freespace-marker",
+      "name": "Free-space marker (demo patch)",
+      "description": "A demo firmware patch that writes and reverts an inert marker in empty flash.",
+      "version": "1.0.0",
+      "capabilities": [
+        "patch-firmware"
+      ],
+      "folder": "firmware-patches",
+      "path": "plugins/firmware-patches/freespace-marker.json",
+      "sha256": "315aed36c68b5ce5e28da777f1111113fdbbc7ef3dc1f7f570b3bd4a10531a2a",
+      "priced": false,
+      "provenance": "official",
+      "page": "plugins/firmware-patches/freespace-marker.md"
+    },
+    {
+      "id": "com.romrevver.example.evo-workflow",
+      "name": "Evo Flash Workflow",
+      "description": "How ROM Revver fits an Evo tuning workflow alongside ECUFlash + a Tactrix cable.",
+      "version": "1.0.0",
+      "capabilities": [],
+      "folder": "display",
+      "path": "plugins/display/evo-flash-workflow.json",
+      "sha256": "474e31e2d35771e79015dde5361d878080294c6e8c8c325216f52c69b3fb167d",
+      "priced": false,
+      "provenance": "official",
+      "page": "plugins/display/evo-flash-workflow.md"
+    },
+    {
+      "id": "com.romrevver.example.evo-fuel",
+      "name": "Fuel Tables",
+      "description": "Every Fuel-category table in the loaded definition, for any platform whose defs categorise fuel tables.",
+      "version": "1.0.0",
+      "capabilities": [],
+      "folder": "display",
+      "path": "plugins/display/evo-fuel-tables.json",
+      "sha256": "02cc257f4fbfe49f5b39a7347802f645116ff07b13054487f36adc88b96e776d",
+      "priced": false,
+      "provenance": "official",
+      "page": "plugins/display/evo-fuel-tables.md"
+    }
+  ]
+}

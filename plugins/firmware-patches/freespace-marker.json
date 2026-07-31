@@ -1,0 +1,24 @@
+{
+  "id": "com.romrevver.example.freespace-marker",
+  "name": "Free-space marker (demo patch)",
+  "version": "1.0.0",
+  "description": "A demo firmware patch that writes and reverts an inert marker in empty flash.",
+  "capabilities": ["patch-firmware"],
+  "panel": {
+    "title": "Free-space marker (demo patch)",
+    "blocks": [
+      { "type": "heading", "text": "Free-space marker — a demo firmware patch" },
+      {
+        "type": "text",
+        "text": "A **firmware patch** demo. It writes 8 bytes (`52 4F 4D 52 45 56 56 52` = \"ROMREVVR\") into **empty flash** and reverts them exactly. It is deliberately **inert**: nothing jumps to those bytes, so the ECU never runs them — it exists to show the code-patch install / preview / uninstall flow safely.\n\n> ⚠️ ROM Revver never tests or endorses firmware patches. A *real* patch would also hook existing code to run its bytes — that part is the author's responsibility and can only be validated in a car.\n\nThe `original` bytes (`FF…`) are the erased-flash value at that address; ROM Revver refuses to install unless they match, so it never patches an unexpected ROM. The address is **per-ECU** (each calibration's free space differs) — this demo covers cal **60E1B900** (and its aliases N3ZBEH / N3ZDEH). Add a block for your own calibration id to cover more."
+      }
+    ]
+  },
+  "patch": {
+    "perEcu": {
+      "60E1B900": [
+        { "address": "0x6A1DC", "bytes": "524f4d5245565652", "original": "ffffffffffffffff" }
+      ]
+    }
+  }
+}
