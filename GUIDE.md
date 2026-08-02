@@ -9,6 +9,7 @@ the ones before it.
 - [Level 2 — write a value (config mod)](#level-2--write-a-value-config-mod)
 - [Level 3 — a firmware patch](#level-3--a-firmware-patch-advanced)
 - [Cover more than one ECU](#cover-more-than-one-ecu)
+- [Organize your plugin in a folder (optional)](#organize-your-plugin-in-a-folder-optional)
 - [Quick reference](#quick-reference)
 
 ---
@@ -247,6 +248,24 @@ addresses yourself (per-ECU precompiling); ROM Revver just picks the right set.
 
 ---
 
+## Organize your plugin in a folder (optional)
+
+If you keep your plugin in a subfolder of your own repo (say, one folder per car), declare
+that path so the marketplace browse list mirrors it:
+
+```jsonc
+{
+  "id": "com.you.idle-bump",
+  "name": "Idle Bump",
+  "browsePath": "mazda/rx8",
+  "panel": { "blocks": [...] }
+}
+```
+
+Plugins with no `browsePath` show at the top level of the browse list, exactly as before.
+
+---
+
 ## Quick reference
 
 | Field | Required? | Meaning |
@@ -259,6 +278,7 @@ addresses yourself (per-ECU precompiling); ROM Revver just picks the right set.
 | `mod` | for config mods | fixed `{ writes: [{ table, cells: [{row,col,value}] }] }`, or computed `{ writes: [{ table, op, param, range\|cells }] }` — [Level 2](#level-2--write-a-value-config-mod). |
 | `params` | for parameterized mods | `[{ id, label, min, max, default, unit?, step? }]` — a numeric input a computed write reads. |
 | `patch` | for firmware patches | `{ regions: […] }` or `{ perEcu: {…} }` — [Level 3](#level-3--a-firmware-patch-advanced) / [multi-ECU](#cover-more-than-one-ecu). |
+| `browsePath` | — | Optional "/"-joined folder path (e.g. `"mazda/rx8"`) matching where you keep this plugin in its source tree. The marketplace browse tree groups plugins by it, nested arbitrarily deep; omit it to show the plugin at the top level. |
 
 Unknown fields and block types are ignored with a warning, so a newer plugin never hard-fails
 on an older app. When something doesn't show up, open the panel and read the **warnings** note.
