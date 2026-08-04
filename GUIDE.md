@@ -53,8 +53,8 @@ plugin can never change your ROM.
     "blocks": [
       { "type": "heading", "text": "About this ROM" },
       { "type": "romInfo" },
-      { "type": "text", "text": "The **fuel** tables are below." },
-      { "type": "tableValues", "table": "Idle Target - Base" },
+      { "type": "text", "text": "The **idle** tables are below." },
+      { "type": "tableValues", "storageaddress": "0x1234" },
       { "type": "tableList", "category": "Idle Control" }
     ]
   }
@@ -70,11 +70,13 @@ The blocks you can use:
 | `divider` | A horizontal line. |
 | `romInfo` | The open ROM's calibration / vehicle / size. |
 | `tableList` | Table names (all, or one `category`). |
-| `tableValues` | A named table's values as a read-only grid (`table`). |
+| `tableValues` | A table's values as a read-only grid, bound by its **storage address** (`storageaddress`). |
 
 `tableValues` and `tableList` need a **matching ROM open**; with none, they show a gentle
-"Open a ROM to see this" placeholder. Table and category names must match your definition
-exactly. See the ready examples in [`plugins/display/`](plugins/display/).
+"Open a ROM to see this" placeholder. `tableList`'s `category` is a name and must match your
+definition exactly; `tableValues` binds by **address**, not name — see
+["Where the address comes from"](#where-the-address-comes-from) in the next section for how to
+get one. See the ready examples in [`plugins/display/`](plugins/display/).
 
 That's everything a **display** plugin can do. The next levels let a plugin *change* the
 ROM — always behind a clear, reversible, opt-in prompt.
@@ -100,12 +102,12 @@ Two new pieces on top of a [Level 1](#level-1--show-some-rom-data) plugin:
   "panel": {
     "blocks": [
       { "type": "heading", "text": "Idle Bump" },
-      { "type": "tableValues", "table": "Idle Target - Base" }
+      { "type": "tableValues", "storageaddress": "0x1234" }
     ]
   },
   "mod": {
     "writes": [
-      { "table": "Idle Target - Base", "cells": [{ "row": 0, "col": 0, "value": 850 }] }
+      { "storageaddress": "0x1234", "cells": [{ "row": 0, "col": 0, "value": 850 }] }
     ]
   }
 }
@@ -115,15 +117,32 @@ Two new pieces on top of a [Level 1](#level-1--show-some-rom-data) plugin:
   editor (850 RPM here), not raw bytes. Out-of-range values are clamped.
 - Opening the panel shows an **Install mod** button. Installing shows a prompt naming exactly
   what will change; **Uninstall mod** puts the original values back, byte-for-byte.
-- Because it names the table by text, **one config mod works on every calibration** whose
-  definition has that table — no per-ECU work needed. (See
-  [Cover more than one ECU](#cover-more-than-one-ecu).)
+- `storageaddress` is what binds the write to a table — a table **name is not a binding** (a
+  name is only ever an optional tie-break, explained under
+  [Let the user pick a value](#let-the-user-pick-a-value-parameterized-mods)). It also decides which cars
+  this mod works on, and the answer is not "all of them": read
+  [Cover more than one ECU](#cover-more-than-one-ecu) before you share it.
+
+### Where the address comes from
+
+Open the ROM **and** your definition in ROM Revver, select the table you want, and open its
+ⓘ (Info) panel. Click **Copy plugin binding** — it puts `"storageaddress": "0x…"` for that exact
+table on your clipboard, read from the definition you actually loaded. Paste it straight into
+your plugin.
+
+Never hand-type an address, and never paste one you copied out of another tool or another
+plugin. An address authored under a different RAM-offset convention almost always matches
+nothing in your definition, and ROM Revver never guesses at a close match — it fails
+**closed** with a plain "no table at this address" refusal. But "almost always" is the
+honest word: a wrong address can still land on some *other* table that happens to live
+there, and nothing downstream can tell that apart from the table you meant. See
+[Cover more than one ECU](#cover-more-than-one-ecu).
 
 ### Let the user pick a value (parameterized mods)
 
 Instead of hard-coded `value`s, a mod can expose a **numeric input** and compute what to write
-from it. Declare a `params` entry, then use a *computed* write — `{ table, op, param, … }` —
-that applies an operation to the input. A computed write **must declare which cells it targets**
+from it. Declare a `params` entry, then use a *computed* write — `{ storageaddress, op, param, … }`
+— that applies an operation to the input. A computed write **must declare which cells it targets**
 (a `range`, a `cells` list, or both): a parameterized mod names its cells so it stays auditable
 and can only ever touch what it declares — never a whole table by surprise.
 
@@ -136,6 +155,7 @@ and can only ever touch what it declares — never a whole table by surprise.
   "mod": {
     "writes": [
       {
+        "storageaddress": "0x1234",
         "table": "Idle Target - Base",
         "op": "raiseTo",
         "param": "idle",
@@ -145,6 +165,11 @@ and can only ever touch what it declares — never a whole table by surprise.
   }
 }
 ```
+
+`table` here is doing something specific and optional: it's a **tie-break**, applied only if
+`storageaddress` matches more than one table in your definition (some defs alias storage between
+tables). It is never required and never the primary key — `storageaddress` alone is a complete,
+valid binding.
 
 The ops (a fixed set — nothing is executed as code); each applies only to the **declared**
 cells:
@@ -168,9 +193,11 @@ The panel shows a number input (bounded by `min`/`max`); the user picks a value,
 writes only the declared cells that actually change (so a lower `raiseTo` value touches fewer
 of them). Install/Uninstall are reversible exactly as before.
 
-Working example — an **Adjustable Idle** mod (pick 800–1300 RPM; at 1300 it reproduces a real
-tune verified byte-for-byte):
-[`plugins/config-mods/adjustable-idle.json`](plugins/config-mods/adjustable-idle.json).
+There is no published config-mod example to copy yet, and that is deliberate: a config mod
+targets real tables, so any worked example would carry one car's addresses. The complete shape
+is the Level 2 example above — the only part you supply is the `storageaddress`, and
+[Where the address comes from](#where-the-address-comes-from) is how you get it from your own
+definition in seconds.
 
 ---
 
@@ -221,26 +248,56 @@ Working (inert, safe) example:
 
 ## Cover more than one ECU
 
-The RX-8 definition covers many ECU calibrations (60E1B900, N3ZBEH, …). How a plugin spans
-them depends on its kind:
+The RX-8 definition covers many ECU calibrations (60E1B900, 60E1A500, …). How a plugin spans
+them depends on its kind — and for a config mod, it's less than you might hope:
 
-- **Config mods** ([Level 2](#level-2--write-a-value-config-mod)) already span every ECU — they
-  name tables, and each calibration's definition resolves that name. Nothing extra to do.
-- **Firmware patches** ([Level 3](#level-3--a-firmware-patch-advanced)) use raw addresses, and
-  free space sits at a different address in each calibration. So instead of one `regions` list,
-  use a **`perEcu` map** keyed by calibration id:
+- **Config mods** ([Level 2](#level-2--write-a-value-config-mod)) bind by **storage address**.
+  An address is neither universal nor unique to one calibration: it is shared by however many
+  calibrations happen to put that table in the same place. In the real RX-8 definition,
+  `Idle Target - Base` sits at six different addresses, and the ~30 calibration ids the
+  definition covers cluster onto those six in groups of 9, 8, 5, 4, 2 and 2. So a mod you
+  author against one calibration also works on every calibration in its group, **and only
+  on those**. There is no way to tell which from the outside; you check each definition.
+
+  What happens on a calibration you did not author for depends on that definition:
+
+  - **The address matches no table** — the plugin fails closed. The panel says the binding
+    didn't resolve and Install is refused. Nothing can be written.
+  - **The address holds a _different_ table** — the mod resolves to **that** table and offers
+    to install. The optional `table` name does **not** protect you here: it is only a tie-break
+    for an address that matches several tables in one definition, never a check that the table
+    found is the one you meant.
+
+  Two things guard that second case, and you should rely on both. ROM Revver's install prompt
+  **names the table it resolved to, under the user's own definition** — read it before
+  confirming. And as the author, name and describe your plugin with the calibrations you
+  actually verified, because a `mod` has no way to declare its ECU: there is no `perEcu` form
+  for `mod` today, only for `patch` (below).
+- **Firmware patches** ([Level 3](#level-3--a-firmware-patch-advanced)) use raw addresses too,
+  and free space sits at a different address in each calibration. Unlike `mod`, `patch` *does*
+  have a **`perEcu` map** keyed by calibration id, so one plugin can cover several:
 
 ```json
 {
   "capabilities": ["patch-firmware"],
   "patch": {
     "perEcu": {
-      "60E1B900": [{ "address": "0x6A1DC", "bytes": "…", "original": "ffff…" }],
-      "N3ZBEH":   [{ "address": "0x6A1DC", "bytes": "…", "original": "ffff…" }]
+      "60E1B900": [
+        { "address": "0x6A1DC", "bytes": "524f4d5245565652", "original": "ffffffffffffffff" }
+      ],
+      "60E1A500": [
+        { "address": "0x6A2B0", "bytes": "524f4d5245565652", "original": "ffffffffffffffff" }
+      ]
     }
   }
 }
 ```
+
+The bytes above are the same inert `ROMREVVR` marker as
+[`plugins/firmware-patches/freespace-marker.json`](plugins/firmware-patches/freespace-marker.json),
+written into erased flash (`ff…`); **the two addresses are illustrative only.** Free space sits
+somewhere different in each calibration, and finding it is your job — do not copy an address out
+of this guide, or out of another calibration's entry, and expect it to be free in yours.
 
 On install, ROM Revver picks the entry matching the open ROM and **refuses if your ECU isn't
 listed** — it will never write one ECU's bytes to another. You still work out each ECU's
@@ -258,7 +315,7 @@ that path so the marketplace browse list mirrors it:
   "id": "com.you.idle-bump",
   "name": "Idle Bump",
   "browsePath": "mazda/rx8",
-  "panel": { "blocks": [...] }
+  "panel": { "blocks": [{ "type": "heading", "text": "Idle Bump" }] }
 }
 ```
 
@@ -275,7 +332,7 @@ Plugins with no `browsePath` show at the top level of the browse list, exactly a
 | `panel.blocks` | ✅ | Panel content (see [Level 1](#level-1--show-some-rom-data)). |
 | `version` | — | Optional, informational. |
 | `capabilities` | for writes | `write-tables` (config mod) and/or `patch-firmware`. |
-| `mod` | for config mods | fixed `{ writes: [{ table, cells: [{row,col,value}] }] }`, or computed `{ writes: [{ table, op, param, range\|cells }] }` — [Level 2](#level-2--write-a-value-config-mod). |
+| `mod` | for config mods | fixed `{ writes: [{ storageaddress, cells: [{row,col,value}] }] }`, or computed `{ writes: [{ storageaddress, op, param, range\|cells }] }` (`table` optional, tie-break only) — [Level 2](#level-2--write-a-value-config-mod). |
 | `params` | for parameterized mods | `[{ id, label, min, max, default, unit?, step? }]` — a numeric input a computed write reads. |
 | `patch` | for firmware patches | `{ regions: […] }` or `{ perEcu: {…} }` — [Level 3](#level-3--a-firmware-patch-advanced) / [multi-ECU](#cover-more-than-one-ecu). |
 | `browsePath` | — | Optional "/"-joined folder path (e.g. `"mazda/rx8"`) matching where you keep this plugin in its source tree. The marketplace browse tree groups plugins by it, nested arbitrarily deep; omit it to show the plugin at the top level. |

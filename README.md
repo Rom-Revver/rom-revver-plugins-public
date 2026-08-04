@@ -19,7 +19,7 @@ Plugins come in three kinds, from safest to most powerful:
 | Folder | Kind | What it does | Needs |
 | --- | --- | --- | --- |
 | [`plugins/display/`](plugins/display/) | **Display panel** | Shows ROM info + tables read-only. Can't change anything. | just a ROM |
-| [`plugins/config-mods/`](plugins/config-mods/) | **Config mod** | Writes **values into named tables** — reversible, undoable. | a matching ROM |
+| `plugins/config-mods/` *(none published yet)* | **Config mod** | Writes **values into tables, bound by ECU address** — reversible, undoable. | a matching ROM |
 | [`plugins/firmware-patches/`](plugins/firmware-patches/) | **Firmware patch** | Writes **code bytes** at fixed addresses (advanced). | a matching ROM |
 
 Start with a **display** plugin — it can't hurt anything. Try
@@ -29,6 +29,20 @@ Start with a **display** plugin — it can't hurt anything. Try
 > patch does is entirely the plugin author's responsibility. Only install patches from
 > someone you trust, and always verify before flashing. (This warning is shown, and
 > can't be turned off, every time you install one.)
+
+## What a plugin looks like
+
+Just JSON — no build step, no code:
+
+```json
+{
+  "id": "com.you.hello",
+  "name": "Hello",
+  "panel": {
+    "blocks": [{ "type": "heading", "text": "Hello!" }]
+  }
+}
+```
 
 ## Make your own
 
