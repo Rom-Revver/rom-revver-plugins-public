@@ -1,8 +1,8 @@
 # ROM Revver plugins
 
 Ready-to-use plugins for [ROM Revver](https://github.com/Rom-Revver/rom-revver-releases),
-plus a guide to writing your own. A plugin is just a **single `.json` file** — no
-coding, nothing to compile.
+plus a guide to writing your own. A plugin is just a **single `.json` file**: no coding,
+nothing to compile.
 
 ## Add a plugin (30 seconds)
 
@@ -19,10 +19,10 @@ Plugins come in three kinds, from safest to most powerful:
 | Folder | Kind | What it does | Needs |
 | --- | --- | --- | --- |
 | [`plugins/display/`](plugins/display/) | **Display panel** | Shows ROM info + tables read-only. Can't change anything. | just a ROM |
-| `plugins/config-mods/` *(none published yet)* | **Config mod** | Writes **values into tables, bound by ECU address** — reversible, undoable. | a matching ROM |
+| `plugins/config-mods/` *(none published yet)* | **Config mod** | Writes **values into tables, bound by ECU address**. Reversible and undoable. | a matching ROM |
 | [`plugins/firmware-patches/`](plugins/firmware-patches/) | **Firmware patch** | Writes **code bytes** at fixed addresses (advanced). | a matching ROM |
 
-Start with a **display** plugin — it can't hurt anything. Try
+Start with a **display** plugin: it can't hurt anything. Try
 [`plugins/display/welcome.json`](plugins/display/welcome.json).
 
 > ⚠️ **A note on firmware patches:** ROM Revver never tests or endorses them. What a
@@ -32,7 +32,7 @@ Start with a **display** plugin — it can't hurt anything. Try
 
 ## What a plugin looks like
 
-Just JSON — no build step, no code:
+Just JSON: no build step, no code.
 
 ```json
 {
@@ -46,7 +46,7 @@ Just JSON — no build step, no code:
 
 ## Make your own
 
-See **[GUIDE.md](GUIDE.md)** — it starts with the simplest possible plugin and adds
+See **[GUIDE.md](GUIDE.md)**. It starts with the simplest possible plugin and adds
 one idea at a time.
 
 ## Found a problem with a plugin here?
@@ -55,5 +55,5 @@ Open an **Issue** on this repo (the **Issues** tab). Thanks!
 
 ---
 
-This collection is versioned independently of the app — see [`VERSION`](VERSION) and the
-`v*` tags. Proprietary, © Ethan Melamed, all rights reserved — see [`LICENSE`](LICENSE).
+This collection is versioned independently of the app. See [`VERSION`](VERSION) and the
+`v*` tags. Proprietary, © Ethan Melamed, all rights reserved. See [`LICENSE`](LICENSE).
