@@ -115,10 +115,10 @@ rule gets its own section: [Pointing at a table](#pointing-at-a-table).
 
 `pivotTable` is the one block that needs `params`, so it earns a few extra lines.
 
-> ⚠️ **`pivotTable` cannot draw data in the current release.** The block is real, its manifest
-> shape below is real, and a plugin using it parses cleanly. But the app has no datalog import
-> path right now, so a `pivotTable` always shows its "no datalog" placeholder. Import is being
-> restored in a later release. Write one if you want to be ready, and don't expect a chart today.
+> `pivotTable` draws once a datalog is imported into the workspace — via **Menu ▸ Import
+> datalog…**, or a plugin's own `read-datalog` capability (a **Load datalog** button in its
+> panel; see the `capabilities` row below). Until then it shows a "no datalog" placeholder in
+> place, never an empty grid.
 
 - It plots **logged datalog samples, not ROM bytes**, and it only draws once a datalog is
   imported. Until then, it says so in place.
@@ -514,7 +514,7 @@ that path so the marketplace browse list mirrors it:
 | `description` | Optional | A one-line summary shown in the marketplace browse list. Required to list the plugin there, same as `version`. |
 | `minAppVersion` | Optional | `MAJOR.MINOR.PATCH`. The oldest app version that may run this plugin. The marketplace shows a listing below that floor as incompatible instead of offering Install. A malformed value is dropped with a warning, never a hard failure. |
 | `targetAppVersion` | Optional | `MAJOR.MINOR.PATCH` you authored against. Informational only. Malformed values are handled the same way as `minAppVersion`. |
-| `capabilities` | Required for writes | `write-tables` for a config mod, `patch-firmware` for a firmware patch. `read-rom` is also accepted, but nothing gates on it today: every display block already works without declaring any capability. |
+| `capabilities` | Required for writes, and for the datalog-load button | `write-tables` for a config mod, `patch-firmware` for a firmware patch, `read-datalog` to offer the app-owned "Load datalog" button in your panel (a read capability — nothing is written). `read-rom` is also accepted, but nothing gates on it today: every display block already works without declaring any capability. |
 | `mod` | Required for config mods | Fixed: `{ writes: [{ storageaddress, cells: [{row,col,value}] }] }`. Computed: `{ writes: [{ storageaddress, op, param, range\|cells }] }` (`table` optional, tie-break only). See [Level 2](#level-2-write-a-value-config-mod). |
 | `params` | Required for parameterized mods | `[{ id, label, min, max, default, unit?, step? }]`. A numeric input a computed write reads. |
 | `patch` | Required for firmware patches | `{ regions: […] }` or `{ perEcu: {…} }`. See [Level 3](#level-3-a-firmware-patch-advanced) and [Cover more than one ECU](#cover-more-than-one-ecu). |
@@ -540,5 +540,6 @@ note.
 - **Re-adding your edited file says "left alone (mod/patch applied)"**: ROM Revver won't swap
   a plugin's file out from under a mod or patch that is currently applied to the open ROM.
   Uninstall it first, then add the edited file.
-- **A `pivotTable` only ever shows a placeholder**: expected in the current release. There's
-  no datalog import path yet.
+- **A `pivotTable` only ever shows a placeholder**: no datalog is loaded yet. Import one —
+  **Menu ▸ Import datalog…**, or your panel's own **Load datalog** button if you declared
+  `read-datalog` — and the pivot draws from it.
