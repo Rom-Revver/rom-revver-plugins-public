@@ -124,6 +124,10 @@ rule gets its own section: [Pointing at a table](#pointing-at-a-table).
   imported. Until then, it says so in place.
 - `xColumn`, `yColumn`, and `valueColumn` each name the `id` of a `select` param whose
   `source` is `"datalog:columns"`. The user picks which logged signal fills each role.
+- Give that param a `sensor` (e.g. `"rpm"`, or a verbose phrase like `"Coolant Temp"`) and
+  its column **auto-picks** from the loaded log instead — matched the same way the coverage
+  overlay matches a table axis (exact name, then a unit-suffix/alias fallback), so most
+  loggers need no manual pick. The dropdown still appears when nothing plausible matches.
 - Each axis gets its breakpoints from one of three places:
   - a static `xBreakpoints` / `yBreakpoints` number array,
   - an `{ "storageaddress": …, "axis": "x"|"y" }` reference that aligns the pivot to a real
@@ -148,8 +152,8 @@ A worked example: three logged columns, binned onto a static grid.
   "version": "1.0.0",
   "description": "A read-only pivot of logged AFR across RPM and load bins.",
   "params": [
-    { "id": "rpmColumn", "label": "RPM column", "type": "select", "source": "datalog:columns" },
-    { "id": "loadColumn", "label": "Load column", "type": "select", "source": "datalog:columns" },
+    { "id": "rpmColumn", "label": "RPM column", "type": "select", "source": "datalog:columns", "sensor": "rpm" },
+    { "id": "loadColumn", "label": "Load column", "type": "select", "source": "datalog:columns", "sensor": "load" },
     { "id": "afrColumn", "label": "AFR column", "type": "select", "source": "datalog:columns" }
   ],
   "panel": {
