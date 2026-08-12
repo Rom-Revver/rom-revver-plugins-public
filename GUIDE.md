@@ -126,8 +126,17 @@ rule gets its own section: [Pointing at a table](#pointing-at-a-table).
   `source` is `"datalog:columns"`. The user picks which logged signal fills each role.
 - Give that param a `sensor` (e.g. `"rpm"`, or a verbose phrase like `"Coolant Temp"`) and
   its column **auto-picks** from the loaded log instead — matched the same way the coverage
-  overlay matches a table axis (exact name, then a unit-suffix/alias fallback), so most
-  loggers need no manual pick. The dropdown still appears when nothing plausible matches.
+  overlay matches a table axis (exact name, then a unit-suffix/alias fallback, then the
+  OBD-II-standard PID names a VersaTuner-style export commonly uses — "Intake Manifold
+  Absolute Pressure" resolves to `"map"` with no alias to write, since it's the official SAE
+  name). The dropdown still appears when nothing plausible matches.
+- **`sensor` is opt-in per param, not all-or-nothing.** A plugin built around specific
+  signals can declare it on the columns with a fixed role (the worked example below
+  declares `"rpm"`/`"load"` on its X/Y columns) and still leave another column free-form
+  (its value column, AFR, has no `sensor` — the user always picks it) — declaring `sensor`
+  on one param never obligates declaring it on the rest. A general-purpose, pick-anything
+  exploration tool should leave every column's `sensor` unset — auto-picking would fight
+  the whole point of letting the user choose freely.
 - Each axis gets its breakpoints from one of three places:
   - a static `xBreakpoints` / `yBreakpoints` number array,
   - an `{ "storageaddress": …, "axis": "x"|"y" }` reference that aligns the pivot to a real
