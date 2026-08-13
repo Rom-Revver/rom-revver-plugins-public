@@ -4,6 +4,10 @@ A ROM Revver plugin is one `.json` file: data, never code, and nothing in it eve
 This guide starts at the smallest possible plugin and adds one idea per section. Read only
 as far as you need: each level links back to the ones before it.
 
+This guide is about writing **one plugin file**. If you want to host a **whole repo** of
+them so users can link it directly in the app (no submission to this repo needed), see
+[LINKED-REPOS.md](LINKED-REPOS.md) instead.
+
 - [Level 0: the smallest plugin](#level-0-the-smallest-plugin)
 - [Level 1: show some ROM data](#level-1-show-some-rom-data)
 - [Pointing at a table](#pointing-at-a-table)
