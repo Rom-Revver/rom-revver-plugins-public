@@ -1,6 +1,6 @@
 {
-  "schema": 1,
-  "generatedAt": "2026-08-23T06:06:41.891Z",
+  "schema": 2,
+  "generatedAt": "2026-08-24T09:07:32.934Z",
   "plugins": [
     {
       "id": "com.romrevver.example.welcome",
@@ -68,6 +68,18 @@
       "priced": false,
       "provenance": "official",
       "page": "plugins/display/evo-fuel-tables.md"
+    },
+    {
+      "id": "com.romrevver.datalogpivot",
+      "name": "Datalog Pivot Table",
+      "description": "Bin any two logged channels against each other and average a third — the classic AFR-by-RPM-and-load view, built from your own log. Requires ROM Revver Pro.",
+      "version": "1.0.0",
+      "capabilities": [],
+      "folder": "display",
+      "requiresFeature": "pivot",
+      "priced": false,
+      "provenance": "official",
+      "browsePath": "Datalog/Analysis"
     }
   ]
 }
