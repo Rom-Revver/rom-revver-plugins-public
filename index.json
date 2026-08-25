@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generatedAt": "2026-08-24T09:07:32.934Z",
+  "generatedAt": "2026-08-25T00:21:53.189Z",
   "plugins": [
     {
       "id": "com.romrevver.example.welcome",
@@ -73,7 +73,7 @@
       "id": "com.romrevver.datalogpivot",
       "name": "Datalog Pivot Table",
       "description": "Bin any two logged channels against each other and average a third — the classic AFR-by-RPM-and-load view, built from your own log. Requires ROM Revver Pro.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "capabilities": [],
       "folder": "display",
       "requiresFeature": "pivot",

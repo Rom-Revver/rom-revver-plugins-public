@@ -93,7 +93,7 @@ All eight block types:
 | `tableList` | `category?` | The ROM's table names, clickable. Filtered to a category when given. |
 | `tableValues` | `storageaddress` (required), `table?` | A table's scaled values as a read-only grid, with axis headers. |
 | `tableLink` | `storageaddress` (required), `table?`, `text?` | A button that opens that table's panel. Labelled `text`, or the resolved table name when `text` is left out. |
-| `pivotTable` | `xColumn`, `yColumn`, `valueColumn`, `xBreakpoints` or `xAxis`, `yBreakpoints` or `yAxis`, `aggregation?`, `interpolate?` | A read-only pivot of logged datalog samples, binned onto two axes. |
+| `pivotTable` | `xColumn`, `yColumn`, `valueColumn`, `xBreakpoints`/`xAxis`?, `yBreakpoints`/`yAxis`?, `aggregation?`, `interpolate?` | A read-only pivot of logged datalog samples, binned onto two axes. Omit an axis's breakpoints/axis entirely and the panel infers it from the imported log, with its own min/max/step and "use axes from table…" controls. |
 
 `tableValues`, `tableLink`, and a `pivotTable` axis all bind to a table the same way. That
 rule gets its own section: [Pointing at a table](#pointing-at-a-table).
@@ -141,7 +141,7 @@ rule gets its own section: [Pointing at a table](#pointing-at-a-table).
   on one param never obligates declaring it on the rest. A general-purpose, pick-anything
   exploration tool should leave every column's `sensor` unset — auto-picking would fight
   the whole point of letting the user choose freely.
-- Each axis gets its breakpoints from one of three places:
+- Each axis gets its breakpoints from one of three places, all optional:
   - a static `xBreakpoints` / `yBreakpoints` number array,
   - an `{ "storageaddress": …, "axis": "x"|"y" }` reference that aligns the pivot to a real
     table's own axis, or
@@ -149,7 +149,22 @@ rule gets its own section: [Pointing at a table](#pointing-at-a-table).
     chooses their own table. See
     [Let the user pick the table instead](#let-the-user-pick-the-table-instead).
 
-  An axis with no breakpoints is refused, not guessed at.
+  **Omit both for an axis** and the pivot draws anyway: ROM Revver infers that axis's
+  breakpoints from the imported log's own range (nice round steps at roughly a dozen
+  bins), and the panel adds its own min/max/step controls for every pivot — no manifest
+  field needed, and they only ever re-bin the view, never write ROM bytes — plus a
+  "use axes from table…" picker (shown whenever at least one axis has neither key) that
+  reuses whichever table the user selects, the same way a `param`-based axis ref does.
+  This is what a general-purpose pivot should do: ship with no breakpoints at all and
+  let the tester's own log and tables decide.
+
+  **Omitting a key is fine; getting one wrong is not.** A present-but-malformed
+  `xBreakpoints`/`yBreakpoints` (an empty array, a non-numeric entry) degrades the
+  WHOLE block to a placeholder — even when that axis also carries a valid `xAxis`/
+  `yAxis`. (A malformed axis ref beside VALID static breakpoints keeps today's
+  behaviour — the block renders on the static list and the mistake surfaces as a
+  manifest warning.) Only a key you never wrote at all is treated as "infer this
+  instead."
 - A `rom:tables` select that an axis points at must declare **no `options` and no
   `default`**. The table is the user's to choose, so a manifest that pre-fills it is
   refused with a warning. What the select stores is that table's **address**, not its name.
